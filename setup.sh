@@ -62,10 +62,12 @@ brew tap joedrago/repo
 brew tap homebrew/cask-versions
 
 # Install CLI
+brew install git
 brew install node
+brew install yarn
 brew install deno
 brew install fd
-brew install git
+brew install wrk
 
 # Install software
 brew install alacritty
@@ -83,6 +85,7 @@ brew install safari-technology-preview
 brew install screen-studio
 brew install slack
 brew install zed
+brew install --cask obsidian
 brew install --cask tidal
 
 # Install tap formulas
