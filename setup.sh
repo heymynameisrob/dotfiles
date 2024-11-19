@@ -241,13 +241,13 @@ printf "%s\n# Adjusting macOS...\n%s" $yellow $end
 printf "%sDone!\n%s" $green $end
 
 printf "%s  - Installing global npm packages $code_dir...%s"
-npm add -g @tailwindcss/language-server
-npm add -g imageoptim-cli
-npm add -g prettier
-npm add -g typescript
-npm add -g typescript-language-server
-npm add -g eslint
-npm add -g shadcn@latest
+npm install -g @tailwindcss/language-server
+npm install -g imageoptim-cli
+npm install -g prettier
+npm install -g typescript
+npm install -g typescript-language-server
+npm install -g eslint
+npm install -g shadcn@latest
 
 #
 # All done!
