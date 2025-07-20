@@ -19,6 +19,7 @@ export PATH=/opt/local/bin:/opt/local/sbin:${PATH}
 alias ll='ls -al'
 alias editgit='code ~/.gitconfig'
 alias editbash='code ~/.bash_profile'
+alias editzsh='code ~/.zshrc'
 alias resource='source ~/.bash_profile && echo "Done!"'
 
 ## Mobile iOS testing

@@ -52,6 +52,18 @@ else
   printf "%s - Already installed\n%s" $cyan $end
 fi
 
+printf "%s\n# Installing Oh My Zsh...\n%s" $yellow $end
+
+printf "%s  - Installing Oh My Zsh...%s"
+if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
+  {
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  } &> /dev/null
+  printf "%s - Done!\n%s" $green $end
+else
+  printf "%s - Already installed\n%s" $cyan $end
+fi
+
 printf "%s\n# Installing software...\n%s" $yellow $end
 
 # Upgrade brew
@@ -70,21 +82,19 @@ brew install fd
 brew install wrk
 
 # Install software
-brew install alacritty
-brew install --cask docker
-brew install --cask orbstack
 brew install figma
 brew install firefox
 brew install firefox@developer-edition
 brew install google-chrome
 brew install google@chrome-canary
 brew install imageoptim
-brew install --cask rectangle
 brew install raycast
 brew install safari-technology-preview
 brew install screen-studio
-brew install slack
 brew install zed
+brew install --cask ghostty
+brew install --cask docker
+brew install --cask orbstack
 brew install --cask obsidian
 brew install --cask tidal
 
@@ -100,7 +110,7 @@ brew cleanup
 
 printf "%s\n# Copying dotfiles...\n%s" $yellow $end
 
-dotfiles=( bash_profile gitconfig )
+dotfiles=( bash_profile gitconfig claude gitignore )
 for file in "${dotfiles[@]}"
 do
   printf "%s  - .$file%s"
@@ -248,6 +258,7 @@ npm install -g typescript
 npm install -g typescript-language-server
 npm install -g eslint
 npm install -g shadcn@latest
+npm install -g @anthropic-ai/claude-code
 
 #
 # All done!

@@ -1,11 +1,3 @@
-// Zed settings
-//
-// For information on how to configure Zed, see the Zed
-// documentation: https://zed.dev/docs/configuring-zed
-//
-// To see all of Zed's default settings without changing your
-// custom settings, run `zed: open default settings` from the
-// command palette (cmd-shift-p / ctrl-shift-p)
 {
   "context_servers": {
     "mcp-server-context7": {
@@ -16,10 +8,10 @@
     }
   },
   "base_keymap": "VSCode",
-  "ui_font_size": 15,
+  "ui_font_size": 16,
   "ui_font_family": ".SystemUIFont",
   "theme": {
-    "mode": "system",
+    "mode": "dark",
     "light": "One Light",
     "dark": "Vesper"
   },
@@ -44,8 +36,6 @@
   "scrollbar": {
     "show": "never"
   },
-
-  // UI settings
   "tabs": {
     "close_position": "right",
     "file_icons": true,
@@ -219,8 +209,6 @@
       }
     }
   },
-
-  // Project panel (explorer equivalent)
   "project_panel": {
     "dock": "right",
     "default_width": 240,
@@ -232,16 +220,21 @@
   },
 
   "agent": {
+    "default_model": {
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-latest"
+    },
+    "inline_assistant_model": {
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-latest"
+    },
     "default_profile": "ask",
     "provider": {
       "name": "anthropic",
       "default_model": "claude-sonnet-4"
     },
-    "version": "1",
     "dock": "left"
   },
-
-  // File exclusions
   "file_scan_exclusions": [
     "**/.git",
     "**/.svn",
@@ -262,8 +255,6 @@
     "**/report",
     "**/node_modules"
   ],
-
-  // Language-specific settings
   "languages": {
     "TypeScript": {
       "formatter": "prettier",
@@ -302,30 +293,12 @@
       "show_wrap_guides": false
     }
   },
-
-  // Terminal settings
   "terminal": {
     "font_size": 16,
     "env": {
       "EDITOR": "zed --wait"
-    },
-    "colors": {
-      "red": "#ff5f5f",
-      "green": "#5fff5f",
-      "yellow": "#ffff5f",
-      "blue": "#5f5fff",
-      "magenta": "#ff5fff",
-      "cyan": "#5fffff",
-      "bright_red": "#ff5f5f",
-      "bright_green": "#5fff5f",
-      "bright_yellow": "#ffff5f",
-      "bright_blue": "#5f5fff",
-      "bright_magenta": "#ff5fff",
-      "bright_cyan": "#5fffff"
     }
   },
-
-  // Git settings
   "git": {
     "git_gutter": "tracked_files",
     "inline_blame": {
@@ -350,17 +323,11 @@
       }
     }
   },
-
-  // Window settings
   "restore_on_startup": "last_workspace",
   "confirm_quit": false,
-
-  // Features
   "features": {
     "copilot": false
   },
-
-  // Prettier formatter settings
   "formatter": {
     "external": {
       "command": "prettier",
