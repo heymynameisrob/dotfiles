@@ -80,6 +80,7 @@ brew install yarn
 brew install deno
 brew install fd
 brew install wrk
+brew install opencode
 
 # Install software
 brew install figma
@@ -136,6 +137,53 @@ else
   printf "%s - Already created\n%s" $cyan $end
 fi
 
+#
+# Copying Zed themes
+#
+
+printf "%s\n# Copying Zed themes...\n%s" $yellow $end
+
+zed_themes_dir="$HOME/.config/zed/themes"
+
+printf "%s  - Creating $zed_themes_dir...%s"
+if [[ ! -e "$zed_themes_dir" ]]; then
+  mkdir -p $zed_themes_dir
+  printf "%s - Success!\n%s" $green $end
+else
+  printf "%s - Already exists\n%s" $cyan $end
+fi
+
+printf "%s  - Copying theme files...%s"
+if [[ -d "themes" ]]; then
+  cp themes/*.json $zed_themes_dir/
+  printf "%s - Success!\n%s" $green $end
+else
+  printf "%s - themes directory not found\n%s" $red $end
+fi
+
+#
+# Copying Ghostty config
+#
+
+printf "%s\n# Copying Ghostty config...\n%s" $yellow $end
+
+ghostty_config_dir="$HOME/.config/ghostty"
+
+printf "%s  - Creating $ghostty_config_dir...%s"
+if [[ ! -e "$ghostty_config_dir" ]]; then
+  mkdir -p $ghostty_config_dir
+  printf "%s - Success!\n%s" $green $end
+else
+  printf "%s - Already exists\n%s" $cyan $end
+fi
+
+printf "%s  - Copying config file...%s"
+if [[ -f "ghostty-config.txt" ]]; then
+  cp ghostty-config.txt $ghostty_config_dir/config
+  printf "%s - Success!\n%s" $green $end
+else
+  printf "%s - ghostty-config.txt not found\n%s" $red $end
+fi
 
 #
 # macOS preferences
