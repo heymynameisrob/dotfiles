@@ -40,7 +40,7 @@ printf "%s======================================================================
 # 1 .Setup
 #
 
-printf "%s\n# Installing Homebrew...\n%s" $yellow $end
+printf "%s\n# Installing Homebrew. This takes a while...\n%s" $yellow $end
 
 printf "%s  - Installing Homebrew...%s"
 if [[ ! -e "/usr/local/bin/brew" ]]; then
