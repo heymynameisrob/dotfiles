@@ -46,4 +46,10 @@ home/.pi/agent/*.db
 home/.pi/agent/*.db-shm
 home/.pi/agent/*.db-wal
 home/.pi/agent/**/*.log
+home/.pi/agent/skills/check-pr-comments/
+home/.pi/agent/skills/codebase-context/
+home/.pi/agent/skills/cubic-loop/
+home/.pi/agent/skills/handle-codebase-scan/
+home/.pi/agent/skills/review-patterns/
+home/.pi/agent/skills/run-review/
 home/.pi/todos/

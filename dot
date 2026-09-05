@@ -23,53 +23,102 @@ function require_command() {
 	command -v "$1" >/dev/null 2>&1 || fail "Missing command: $1"
 }
 
+function link_pi_directory() {
+	local directory_name="$1"
+	local source_directory="$PI_DIR/$directory_name"
+	local target_directory="$HOME/.pi/agent/$directory_name"
+	local unexpected_file
+	local runtime_link
+	local relative_path
+
+	mkdir -p "$source_directory" "$(dirname "$target_directory")"
+
+	if [[ -L "$target_directory" && "$(realpath "$target_directory")" == "$source_directory" ]]; then
+		return 0
+	fi
+
+	if [[ -d "$target_directory" ]]; then
+		unexpected_file="$(find "$target_directory" -type d -name node_modules -prune -o -type f -print -quit)"
+		if [[ -n "$unexpected_file" ]]; then
+			fail "Move local Pi source into the repository first: $unexpected_file"
+			return 1
+		fi
+
+		while IFS= read -r -d '' runtime_link; do
+			relative_path="${runtime_link#"$target_directory/"}"
+			if [[ ! -e "$source_directory/$relative_path" && ! -L "$source_directory/$relative_path" ]]; then
+				mkdir -p "$(dirname "$source_directory/$relative_path")"
+				ln -s "$(readlink "$runtime_link")" "$source_directory/$relative_path"
+			fi
+		done < <(find "$target_directory" -type l -print0)
+
+		rm -rf "$target_directory"
+	elif [[ -e "$target_directory" || -L "$target_directory" ]]; then
+		fail "Cannot replace Pi path: $target_directory"
+		return 1
+	fi
+
+	ln -s "$source_directory" "$target_directory"
+	info "Linked Pi $directory_name directory"
+}
+
+function link_pi_authored_directories() {
+	link_pi_directory extensions
+	link_pi_directory prompts
+	link_pi_directory skills
+}
+
 function command_stow() {
 	require_command stow
-	stow --restow --no-folding --ignore='node_modules' --dir "$DOTFILES_DIR" --target "$HOME" home
+	link_pi_authored_directories
+	stow --restow --no-folding --ignore='node_modules' --ignore='^\.pi/agent/(extensions|prompts|skills)' --dir "$DOTFILES_DIR" --target "$HOME" home
 	info "Linked managed configuration into $HOME"
 }
 
 function command_unstow() {
+	local directory_name
+
 	require_command stow
-	stow --delete --no-folding --ignore='node_modules' --dir "$DOTFILES_DIR" --target "$HOME" home
+	stow --delete --no-folding --ignore='node_modules' --ignore='^\.pi/agent/(extensions|prompts|skills)' --dir "$DOTFILES_DIR" --target "$HOME" home
+	for directory_name in extensions prompts skills; do
+		if [[ -L "$HOME/.pi/agent/$directory_name" && "$(realpath "$HOME/.pi/agent/$directory_name")" == "$PI_DIR/$directory_name" ]]; then
+			rm "$HOME/.pi/agent/$directory_name"
+		fi
+	done
 	info "Removed managed links from $HOME"
 }
 
 function command_check_stow() {
 	require_command stow
-	stow --restow --no-folding --simulate --verbose=1 --ignore='node_modules' --dir "$DOTFILES_DIR" --target "$HOME" home
+	stow --restow --no-folding --simulate --verbose=1 --ignore='node_modules' --ignore='^\.pi/agent/(extensions|prompts|skills)' --dir "$DOTFILES_DIR" --target "$HOME" home
 }
 
-function sync_pi_directory() {
-	local directory_name="$1"
-	local source_directory="$HOME/.pi/agent/$directory_name"
+function prepare_managed_targets() {
 	local source_file
 	local relative_path
 	local target_file
 
-	[[ -d "$source_directory" ]] || return 0
-
 	while IFS= read -r -d '' source_file; do
-		relative_path="${source_file#"$HOME/.pi/agent/"}"
-		target_file="$PI_DIR/$relative_path"
+		relative_path="${source_file#"$HOME_PACKAGE/"}"
+		target_file="$HOME/$relative_path"
 
-		if [[ -e "$target_file" ]]; then
-			fail "Cannot import existing Pi source: $relative_path"
-			return 1
+		if [[ -e "$target_file" || -L "$target_file" ]]; then
+			if [[ ! -L "$target_file" || "$(realpath "$target_file" 2>/dev/null || true)" != "$source_file" ]]; then
+				rm -f "$target_file"
+				info "Replaced $relative_path"
+			fi
 		fi
+	done < <(find "$HOME_PACKAGE" -type d \( -name node_modules -o -name .git -o -path "$HOME_PACKAGE/.claude" -o -path "$HOME_PACKAGE/.config/zed/prompts" -o -path "$HOME_PACKAGE/.pi/agent/extensions" -o -path "$HOME_PACKAGE/.pi/agent/prompts" -o -path "$HOME_PACKAGE/.pi/agent/skills" \) -prune -o -type f ! -iname '*backup*' ! -iname '*.bak' ! -iname '*.old' -print0)
+}
 
-		mkdir -p "$(dirname "$target_file")"
-		mv "$source_file" "$target_file"
-		info "Imported $relative_path"
-	done < <(find "$source_directory" -type d \( -name node_modules -o -name .git \) -prune -o -type f -print0)
+function command_sync() {
+	prepare_managed_targets
+	command_stow
+	info "Applied repository configuration to $HOME"
 }
 
 function command_sync_pi() {
-	sync_pi_directory extensions
-	sync_pi_directory prompts
-	sync_pi_directory skills
-	command_stow
-	info "Synchronized authored Pi files"
+	command_sync
 }
 
 function command_packages() {
@@ -164,7 +213,8 @@ Commands:
   update      Pull changes and refresh packages, dependencies, and links
   packages    Install packages from packages/Brewfile
   pi          Install Pi package dependencies with npm ci
-  sync-pi     Import new authored Pi files and link them from the repository
+  sync        Apply repository configuration without removing unmanaged files
+  sync-pi     Apply repository configuration; retained as a compatibility alias
   stow        Link home/ into the current home directory
   unstow      Remove links managed by this repository
   check-stow  Show link conflicts without changing files
@@ -179,6 +229,7 @@ function main() {
 		update) command_update ;;
 		packages) command_packages ;;
 		pi) command_pi ;;
+		sync) command_sync ;;
 		sync-pi) command_sync_pi ;;
 		stow) command_stow ;;
 		unstow) command_unstow ;;

@@ -55,7 +55,8 @@ dot init        Install Brew packages, Pi dependencies, and links
 dot update      Pull and refresh packages, dependencies, and links
 dot packages    Install packages from packages/Brewfile
 dot pi          Install Pi dependencies with npm ci
-dot sync-pi     Import new authored Pi files and link them from the repository
+dot sync        Apply repository files without removing unmanaged home files
+dot sync-pi     Compatibility alias for dot sync
 dot stow        Link home/ into $HOME
 dot unstow      Remove repository-managed links
 dot check-stow  report conflicts without changing files
@@ -76,13 +77,15 @@ home/.pi/agent/skills/       -> ~/.pi/agent/skills/
 
 Run `./dot check-stow` and then `./dot stow`.
 
-When Pi creates a new extension, prompt, or skill directly under `~/.pi/agent`, import it into the repository and replace it with a managed link:
+Apply repository files to the home directory and replace conflicting managed files with links:
 
 ```bash
-./dot sync-pi
+./dot sync
 ```
 
-Review and commit the imported files after synchronization.
+The repository is the source of truth. The command only changes paths that have a corresponding file under `home/`. It does not remove other files from the home directory. Backup files and Zed's `prompts` directory are ignored. `./dot sync-pi` remains as a compatibility alias for `./dot sync`.
+
+The complete `extensions`, `prompts`, and `skills` directories under `~/.pi/agent` link to their matching directories under `home/.pi/agent`. Content installed by Pi on this machine is therefore created directly in the repository. Review and commit new authored files after installation. Generated `node_modules` content and known Cubic runtime skill links remain ignored by Git.
 
 ## Secrets and runtime state
 
