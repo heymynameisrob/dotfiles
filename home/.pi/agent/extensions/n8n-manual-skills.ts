@@ -2,6 +2,7 @@ import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
 const AUTOMATIC_N8N_SKILLS = new Set([
   "n8n:ui-design",
+  "n8n:design-system",
   "n8n:content-design",
   "n8n:conventions",
 ]);
