@@ -1,0 +1,305 @@
+{
+  "prettier": {
+    "allowed": true
+  },
+  "auto_update_extensions": {
+    "vue": false
+  },
+  "cli_default_open_behavior": "existing_window",
+  "agent_servers": {
+    "pi-acp": {
+      "type": "registry"
+    },
+    "codex-acp": {
+      "default_config_options": {
+        "model": "gpt-5.5",
+        "mode": "full-access",
+        "reasoning_effort": "low"
+      },
+      "favorite_config_option_values": {
+        "mode": ["full-access"]
+      },
+      "type": "registry"
+    },
+    "opencode": {
+      "type": "registry"
+    }
+  },
+  "outline_panel": {
+    "dock": "right"
+  },
+  "collaboration_panel": {
+    "dock": "right"
+  },
+  "git_panel": {
+    "dock": "right"
+  },
+  "diff_view_style": "unified",
+  "base_keymap": "VSCode",
+  "ui_font_size": 15,
+  "ui_font_family": ".SystemUIFont",
+  "theme": {
+    "mode": "dark",
+    "light": "Milos",
+    "dark": "Milos"
+  },
+  "tab_size": 2,
+  "indent_guides": {
+    "enabled": true
+  },
+  "buffer_font_family": "Berkeley Mono",
+  "buffer_font_size": 17,
+  "buffer_line_height": {
+    "custom": 2.0
+  },
+  "show_edit_predictions": true,
+  "inlay_hints": {
+    "enabled": false
+  },
+  "gutter": {
+    "line_numbers": true,
+    "folds": true
+  },
+  "format_on_save": "on",
+  "scrollbar": {
+    "show": "never"
+  },
+
+  "title_bar": {
+    "show_branch_status_icon": true
+  },
+  "tabs": {
+    "close_position": "right",
+    "file_icons": true,
+    "git_status": true
+  },
+  "toolbar": {
+    "breadcrumbs": false,
+    "quick_actions": false
+  },
+
+  "project_panel": {
+    "dock": "left",
+    "default_width": 320,
+    "file_icons": true,
+    "folder_icons": true,
+    "git_status": true,
+    "indent_size": 20,
+    "auto_reveal_entries": true
+  },
+
+  "agent_ui_font_size": 16,
+  "agent": {
+    "tool_permissions": {
+      "tools": {
+        "terminal": {
+          "default": "allow"
+        }
+      }
+    },
+    "profiles": {
+      "ask": {
+        "default_model": {
+          "provider": "openai",
+          "model": "gpt-5.5-pro",
+          "enable_thinking": true
+        },
+        "name": "Ask",
+        "tools": {
+          "diagnostics": true,
+          "fetch": true,
+          "list_directory": true,
+          "project_notifications": false,
+          "now": true,
+          "find_path": true,
+          "read_file": true,
+          "open": true,
+          "grep": true,
+          "spawn_agent": true,
+          "thinking": true,
+          "update_plan": true,
+          "search_web": true,
+          "terminal": true
+        },
+        "enable_all_context_servers": false,
+        "context_servers": {}
+      }
+    },
+    "default_profile": "write",
+    "default_model": {
+      "enable_thinking": false,
+      "model": "moonshotai/kimi-k2.5",
+      "provider": "openrouter"
+    },
+    "dock": "left",
+    "default_width": 464
+  },
+
+  "file_scan_exclusions": [
+    "**/.git",
+    "**/.svn",
+    "**/.hg",
+    "**/CVS",
+    "**/.DS_Store",
+    "**/Thumbs.db",
+    "**/.classpath",
+    "**/.settings",
+    "**/out",
+    "**/dist",
+    "**/.turbo",
+    "**/.vscode-test",
+    "**/.vscode",
+    "**/.next",
+    "**/.tap",
+    "**/.nyc_output",
+    "**/report",
+    "**/node_modules"
+  ],
+  "languages": {
+    "Vue.js": {
+      "completions": {
+        "lsp": true
+      },
+      "enable_language_server": true
+    },
+    "TypeScript": {
+      "formatter": "prettier",
+      "language_servers": ["vtsls"],
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      }
+    },
+    "TSX": {
+      "formatter": "prettier",
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      }
+    },
+    "JavaScript": {
+      "formatter": "prettier",
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      }
+    },
+    "Markdown": {
+      "soft_wrap": "preferred_line_length",
+      "preferred_line_length": 120,
+      "show_wrap_guides": false
+    }
+  },
+
+  "terminal": {
+    "font_size": 16,
+    "env": {
+      "EDITOR": "zed --wait"
+    },
+    "font_family": "Berkeley Mono"
+  },
+
+  "git": {
+    "git_gutter": "tracked_files",
+    "inline_blame": {
+      "show_commit_summary": true,
+      "padding": 6,
+      "delay_ms": 200,
+      "enabled": true
+    }
+  },
+  "lsp": {
+    "typescript-language-server": {
+      "initialization_options": {
+        "preferences": {
+          "importModuleSpecifierPreference": "non-relative"
+        }
+      }
+    },
+    "vtsls": {
+      "initialization_options": {
+        "typescript": {
+          "tsdk": "/Users/robn8n/code/n8n/node_modules/typescript/lib"
+        }
+      },
+      "settings": {
+        "javascript": {
+          "updateImportsOnFileMove": {
+            "enabled": "always"
+          }
+        },
+        "typescript": {
+          "updateImportsOnFileMove": {
+            "enabled": "always"
+          },
+          "preferences": {
+            "importModuleSpecifier": "non-relative"
+          }
+        }
+      }
+    },
+    "vue-language-server": {
+      "initialization_options": {
+        "typescript": {
+          "tsdk": "/Users/robn8n/code/n8n/node_modules/typescript/lib"
+        }
+      }
+    },
+    "css-variables": {
+      "settings": {
+        "cssVariables": {
+          "lookupFiles": ["**/*.scss", "**/.css", "**/.vue"],
+          "blacklistFolders": ["**/dist/**", "**/node_modules/**"]
+        }
+      }
+    }
+  },
+
+  "restore_on_startup": "last_workspace",
+  "confirm_quit": false,
+
+  "formatter": {
+    "external": {
+      "command": "prettier",
+      "arguments": ["--stdin-filepath", "{buffer_path}"]
+    }
+  },
+
+  "edit_predictions": {
+    "provider": "zed",
+    "mode": "subtle"
+  },
+  "context_servers": {
+    "notion": {
+      "enabled": true,
+      "url": "https://mcp.notion.com/mcp"
+    },
+    "linear": {
+      "enabled": true,
+      "url": "https://mcp.linear.app/mcp"
+    },
+    "mcp-server-context7": {
+      "settings": {
+        "context7_api_key": ""
+      }
+    }
+  },
+  "language_models": {
+    "opencode": {
+      "show_free_models": false,
+      "show_go_models": false
+    },
+    "open_router": {
+      "api_url": "https://openrouter.ai/api/v1",
+      "available_models": [
+        {
+          "name": "moonshotai/kimi-k2.5",
+          "display_name": "Kimi K2.5 (Fastest)",
+          "max_tokens": 200000,
+          "supports_tools": true,
+          "supports_images": true,
+          "provider": {
+            "order": ["baseten", "inceptron/int4", "together"]
+          }
+        }
+      ]
+    }
+  }
+}

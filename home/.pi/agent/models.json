@@ -1,0 +1,58 @@
+{
+  "providers": {
+    "opencode": {
+      "modelOverrides": {
+        "kimi-k2.6": {
+          "thinkingLevelMap": {
+            "off": "none"
+          }
+        },
+        "deepseek-v4-flash": {
+          "compat": {
+            "thinkingFormat": "openai"
+          },
+          "thinkingLevelMap": {
+            "minimal": null,
+            "low": null,
+            "medium": null,
+            "high": "high",
+            "xhigh": "max"
+          }
+        },
+        "kimi-k2.5": {
+          "thinkingLevelMap": {
+            "off": "none"
+          }
+        }
+      }
+    },
+    "opencode-go": {
+      "modelOverrides": {
+        "kimi-k2.6": {
+          "thinkingLevelMap": {
+            "off": "none"
+          }
+        },
+        "kimi-k2.5": {
+          "thinkingLevelMap": {
+            "off": "none"
+          }
+        }
+      }
+    },
+    "openrouter": {
+      "modelOverrides": {
+        "moonshotai/kimi-k2.6": {
+          "thinkingLevelMap": {
+            "off": "none"
+          }
+        },
+        "moonshotai/kimi-k2.5": {
+          "thinkingLevelMap": {
+            "off": "none"
+          }
+        }
+      }
+    }
+  }
+}

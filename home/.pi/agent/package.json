@@ -1,0 +1,53 @@
+{
+  "name": "pi-config",
+  "version": "1.0.0",
+  "description": "Personal Pi configuration package — extensions, skills, prompts, and themes",
+  "keywords": [
+    "pi-package"
+  ],
+  "private": true,
+  "workspaces": [
+    "extensions/*"
+  ],
+  "scripts": {
+    "check": "npm run check --if-present --workspaces"
+  },
+  "dependencies": {
+    "@heyhuynhgiabuu/pi-diff": "^0.5.5",
+    "@linear/sdk": "^90.0.0",
+    "@tintinweb/pi-subagents": "^0.8.0",
+    "ctx7": "latest",
+    "pi-ask-user": "^0.11.0",
+    "pi-bash-live-view": "^0.1.1"
+  },
+  "bundledDependencies": [
+    "pi-ask-user",
+    "pi-bash-live-view"
+  ],
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*"
+  },
+  "pi": {
+    "extensions": [
+      "./extensions",
+      "node_modules/pi-ask-user",
+      "node_modules/pi-bash-live-view",
+      "node_modules/@tintinweb/pi-subagents",
+      "node_modules/@heyhuynhgiabuu/pi-diff"
+    ],
+    "skills": [
+      "./skills",
+      "node_modules/pi-ask-user/skills"
+    ],
+    "prompts": [
+      "./prompts"
+    ],
+    "themes": [
+      "./themes"
+    ]
+  },
+  "bundleDependencies": [
+    "pi-ask-user",
+    "pi-bash-live-view"
+  ]
+}

@@ -1,0 +1,192 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+readonly DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly HOME_PACKAGE="$DOTFILES_DIR/home"
+readonly BREWFILE="$DOTFILES_DIR/packages/Brewfile"
+readonly PI_DIR="$HOME_PACKAGE/.pi/agent"
+
+function info() {
+	printf '✓ %s\n' "$1"
+}
+
+function warn() {
+	printf '⚠ %s\n' "$1" >&2
+}
+
+function fail() {
+	printf '✗ %s\n' "$1" >&2
+	return 1
+}
+
+function require_command() {
+	command -v "$1" >/dev/null 2>&1 || fail "Missing command: $1"
+}
+
+function command_stow() {
+	require_command stow
+	stow --restow --no-folding --ignore='node_modules' --dir "$DOTFILES_DIR" --target "$HOME" home
+	info "Linked managed configuration into $HOME"
+}
+
+function command_unstow() {
+	require_command stow
+	stow --delete --no-folding --ignore='node_modules' --dir "$DOTFILES_DIR" --target "$HOME" home
+	info "Removed managed links from $HOME"
+}
+
+function command_check_stow() {
+	require_command stow
+	stow --restow --no-folding --simulate --verbose=1 --ignore='node_modules' --dir "$DOTFILES_DIR" --target "$HOME" home
+}
+
+function sync_pi_directory() {
+	local directory_name="$1"
+	local source_directory="$HOME/.pi/agent/$directory_name"
+	local source_file
+	local relative_path
+	local target_file
+
+	[[ -d "$source_directory" ]] || return 0
+
+	while IFS= read -r -d '' source_file; do
+		relative_path="${source_file#"$HOME/.pi/agent/"}"
+		target_file="$PI_DIR/$relative_path"
+
+		if [[ -e "$target_file" ]]; then
+			fail "Cannot import existing Pi source: $relative_path"
+			return 1
+		fi
+
+		mkdir -p "$(dirname "$target_file")"
+		mv "$source_file" "$target_file"
+		info "Imported $relative_path"
+	done < <(find "$source_directory" -type f -print0)
+}
+
+function command_sync_pi() {
+	sync_pi_directory extensions
+	sync_pi_directory prompts
+	sync_pi_directory skills
+	command_stow
+	info "Synchronized authored Pi files"
+}
+
+function command_packages() {
+	require_command brew
+	brew bundle --file "$BREWFILE"
+}
+
+function register_pi_package() {
+	local settings_file="$HOME/.pi/agent/settings.json"
+	mkdir -p "$(dirname "$settings_file")"
+	node - "$settings_file" "$HOME/.pi/agent" <<'NODE'
+const fs = require('node:fs');
+const settingsFile = process.argv[2];
+const packagePath = process.argv[3];
+const settings = fs.existsSync(settingsFile)
+	? JSON.parse(fs.readFileSync(settingsFile, 'utf8'))
+	: {};
+const packages = Array.isArray(settings.packages) ? settings.packages : [];
+settings.packages = [packagePath, ...packages.filter(function filterPackage(value) {
+	return value !== packagePath && value !== `${process.env.HOME}/code/pi-config`;
+})];
+fs.writeFileSync(settingsFile, `${JSON.stringify(settings, null, 2)}\n`, { mode: 0o600 });
+NODE
+	chmod 600 "$settings_file"
+}
+
+function command_pi() {
+	require_command npm
+	(
+		cd "$PI_DIR"
+		npm ci
+	)
+	register_pi_package
+	info "Installed and registered Pi package"
+}
+
+function command_doctor() {
+	local failed=0
+	local command_name
+
+	for command_name in git brew stow node npm pi; do
+		if command -v "$command_name" >/dev/null 2>&1; then
+			info "$command_name is available"
+		else
+			warn "$command_name is not available"
+			failed=1
+		fi
+	done
+
+	if [[ -d "$HOME/code/pi-config/.pi" ]]; then
+		warn "Legacy Pi runtime directory remains available for rollback: $HOME/code/pi-config/.pi"
+	fi
+
+	if grep -q 'PI_CODING_AGENT_DIR=.*pi-config' "$HOME/.zshrc" 2>/dev/null; then
+		warn "~/.zshrc still points PI_CODING_AGENT_DIR at the old pi-config repository"
+		failed=1
+	fi
+
+	if ! command_check_stow >/dev/null 2>&1; then
+		warn "Stow found conflicting files. Run: dot check-stow"
+		failed=1
+	fi
+
+	if [[ "$failed" -ne 0 ]]; then
+		return 1
+	fi
+
+	info "No configuration problems found"
+}
+
+function command_init() {
+	command_packages
+	command_pi
+	command_stow
+	command_doctor
+}
+
+function command_update() {
+	git -C "$DOTFILES_DIR" pull --ff-only
+	command_packages
+	command_pi
+	command_stow
+	command_doctor
+}
+
+function print_help() {
+	cat <<'EOF'
+Usage: dot <command>
+
+Commands:
+  init        Install packages, Pi dependencies, and managed links
+  update      Pull changes and refresh packages, dependencies, and links
+  packages    Install packages from packages/Brewfile
+  pi          Install Pi package dependencies with npm ci
+  sync-pi     Import new authored Pi files and link them from the repository
+  stow        Link home/ into the current home directory
+  unstow      Remove links managed by this repository
+  check-stow  Show link conflicts without changing files
+  doctor      Check required tools, legacy Pi paths, and link conflicts
+  help        Show this help
+EOF
+}
+
+function main() {
+	case "${1:-help}" in
+		init) command_init ;;
+		update) command_update ;;
+		packages) command_packages ;;
+		pi) command_pi ;;
+		sync-pi) command_sync_pi ;;
+		stow) command_stow ;;
+		unstow) command_unstow ;;
+		check-stow) command_check_stow ;;
+		doctor) command_doctor ;;
+		help|-h|--help) print_help ;;
+		*) fail "Unknown command: $1"; print_help; return 1 ;;
+	esac
+}
+
+main "$@"
