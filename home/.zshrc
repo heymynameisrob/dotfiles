@@ -150,8 +150,6 @@ alias resource='source ~/.bash_profile && echo "Done!"'
 alias ios='open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app'
 
 # Alias for micro
-alias micro='./micro'
-alias code='tmux has-session -t code 2>/dev/null && tmux resize-pane -t code:0.0 -x 40 \; attach -t code || tmux new-session -s code -c "$PWD" "bontree" \; split-window -h -c "$PWD" "opencode" \; select-pane -t 0 \; resize-pane -x 40'
 alias n8n-rebuild="$HOME/.config/n8n/n8n-rebuild.sh"
 alias n8n-env='cat "$HOME/.config/n8n/.env"'
 alias n8n="cd ~/code/n8n/packages/frontend && pnpm dev:fe"
@@ -164,8 +162,6 @@ n8n_fe_ent() {
 }
 
 alias n8n-fe="$HOME/.config/n8n/n8n-fe.sh"
-alias n8n-fe-ent='n8n_fe_ent'
-alias n8n-storybook="$HOME/.config/n8n/n8n-sb.sh"
 alias n8n-sb="$HOME/.config/n8n/n8n-sb.sh"
 n8n_kill() {
   local pids pgids
