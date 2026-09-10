@@ -15,6 +15,7 @@ const THINKING_LEVELS = new Set<ThinkingLevel>([
 ]);
 
 const THINKING_BY_MODEL: Record<string, ThinkingLevel> = {
+  "openai/gpt-6-astra": "medium",
   "openai-codex/gpt-5.5": "low",
   "anthropic/claude-opus-4-7": "high",
   "opencode/deepseek-v4-flash": "high",

@@ -13,6 +13,9 @@
       "./index.ts"
     ]
   },
+  "dependencies": {
+    "marked": "^16.3.0"
+  },
   "devDependencies": {
     "@types/node": "^24.5.2",
     "tsx": "^4.20.5",

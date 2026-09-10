@@ -1,0 +1,14 @@
+{
+  "name": "pi-read-extension",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "pi": {
+    "extensions": [
+      "./index.ts"
+    ]
+  },
+  "dependencies": {
+    "marked": "^16.3.0"
+  }
+}
