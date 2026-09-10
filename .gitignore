@@ -53,3 +53,5 @@ home/.pi/agent/skills/handle-codebase-scan/
 home/.pi/agent/skills/review-patterns/
 home/.pi/agent/skills/run-review/
 home/.pi/todos/
+
+/home/.zshrc
